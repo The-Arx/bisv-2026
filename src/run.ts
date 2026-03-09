@@ -33,11 +33,6 @@ enum Seal {
     PURPLE,
 }
 
-
-interface Rank {
-    chips: number,
-    face:
-}
 enum Rank {
     TWO,
     THREE,
@@ -55,7 +50,7 @@ enum Rank {
 }
 
 class Card {
-    rank: number;
+    rank: Rank;
     suit: Suit;
     enhancment: Enhancment;
     seal: Seal;
@@ -63,12 +58,23 @@ class Card {
 }
 
 class Hand {
-    cards: Card[];
+    cards_selected: Card[];
+    total_cards: number;
+    rank_sets: {[rank: Rank]: Set<Card>}
+    cards_scored: Card[];
 
+    // Does not initialized cards_scored
+    constructor (cards: Card[]) {
+        rank_sets = {};
+        cards_selected = cards;
+	total_cards = cards.size;
+	for (const card of cards) {
+	    rank_sets[card.rank].add(card);
+	}
+    }
 }
 
-type MatchFunction = (hand: Hand) => Set<number> | null;
-
+type MatchFunction = (hand: Hand) => Set<Card> | null;
 
 interface HandType {
     name: string;
@@ -82,11 +88,9 @@ function matchBoth(f1: MatchFunction, f2: MatchFunction): MatchFunction {
     return (hand: Hand) => {
         const m1 = f1(hand);
         const m2 = f2(hand);
-        return m1 && m2 ? [...new Set([...m1, ...m2]) : null;
+        return m1 && m2 ? new Set([...m1, ...m2]) : null;
     };
 }
-
-
 
 const hands = {
     flush_five: {
@@ -141,31 +145,27 @@ const hands = {
         name: "Three of a Kind",
         score: { chips: 30, mult: 3 },
         delta: { chips: 20, mult: 2 },
-        match: match;
+        match: match3OAK;
     },
     two_pair: {
         name: "Two Pair",
         score: { chips: 20, mult: 2 },
         delta: { chips: 20, mult: 1 },
+	match: matchTwoPair;
     },
     pair: {
         name: "Pair",
         score: { chips: 10, mult: 2 },
         delta: { chips: 15, mult: 1 },
+	match: matchPair;
     },
     high_card: {
         name: "High Card",
         score: { chips: 5, mult: 1 },
         delta: { chips: 10, mult: 1 },
+	match: matchHighCard;
     },
 };
-
-
-
-
-
-
-
 
 class Run {
     hand_size = 8

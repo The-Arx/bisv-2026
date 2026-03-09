@@ -1,5 +1,7 @@
 import { Application, Assets, Sprite } from "pixi.js";
 
+import "game.ts";
+
 (async () => {
   // Create a new application
   const app = new Application();
