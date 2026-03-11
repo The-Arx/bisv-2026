@@ -1,3 +1,21 @@
+class Run {
+    hand_size = 8;
+    hands = 4;
+    discards = 3;
+    joker_slots = 5;
+    consumable_slots = 2;
+    ante = 1;
+    round = 1;
+
+    four_fingers_owned = false;
+    shortcut_owned = false;
+    
+    hands: { [id: string]: HandType }
+    // TODO: make deck
+    deck: Deck;
+}
+
+
 enum Suit {
     SPADE,
     HEART,
@@ -34,7 +52,7 @@ enum Seal {
 }
 
 enum Rank {
-    TWO,
+    TWO = 2,
     THREE,
     FOUR,
     FIVE,
@@ -59,17 +77,28 @@ class Card {
 
 class Hand {
     cards_selected: Card[];
+    cards_without_stone: Card[];
     total_cards: number;
     rank_sets: {[rank: Rank]: Set<Card>}
+    suit_sets: {[suit: Suit]: Set<Card>}
     cards_scored: Card[];
 
     // Does not initialized cards_scored
-    constructor (cards: Card[]) {
-        rank_sets = {};
-        cards_selected = cards;
-	total_cards = cards.size;
-	for (const card of cards) {
-	    rank_sets[card.rank].add(card);
+    constructor (run, cards: Card[]) {
+        this.cards_selected = cards;
+	this.cards_without_stone = cards.filter(card => card.enhancement !== Enhancement.STONE);
+
+	this.total_cards = cards.length;
+
+        this.rank_sets = {};
+	this.suit_sets = {};
+	
+	for (const card of cards_without_stone) {
+	    if (!this.rank_sets[card.rank]) this.rank_sets[card.rank] = new Set<Card>();
+	    if (!this.suit_sets[suit.rank]) this.suit_sets[card.suit] = new Set<Card>();
+
+	    this.rank_sets[card.rank].add(card);
+	    this.suit_sets[card.suit].add(card);
 	}
     }
 }
@@ -81,15 +110,6 @@ interface HandType {
     score: { chips: number; mult: number; };
     delta: { chips: number; mult: number; };
     match: MatchFunction;
-}
-
-
-function matchBoth(f1: MatchFunction, f2: MatchFunction): MatchFunction {
-    return (hand: Hand) => {
-        const m1 = f1(hand);
-        const m2 = f2(hand);
-        return m1 && m2 ? new Set([...m1, ...m2]) : null;
-    };
 }
 
 const hands = {
@@ -166,16 +186,3 @@ const hands = {
 	match: matchHighCard;
     },
 };
-
-class Run {
-    hand_size = 8
-    hands = 4
-    discards = 3
-    joker_slots = 5
-    consumable_slots = 2
-    ante = 1
-    round = 1
-
-    hands: { [id: string]: HandType }
-    deck
-}
