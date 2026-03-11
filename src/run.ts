@@ -1,3 +1,7 @@
+class Deck {
+    start_run: (run: Run) => void;
+}
+
 class Run {
     hand_size = 8;
     hands = 4;
@@ -13,6 +17,11 @@ class Run {
     hands: { [id: string]: HandType }
     // TODO: make deck
     deck: Deck;
+
+    constructor (deck: Deck) {
+	this.deck = deck;
+	deck.start_run(this);
+    }
 }
 
 
@@ -69,7 +78,7 @@ enum Rank {
 
 class Card {
     // Add stuff later.
-    // Taro, booster pack, vouchers, playing cards, jokers, etc.
+    // Taro, planet, booster pack, vouchers, playing cards, jokers, etc.
     // all inherit from this.
 }
 
@@ -79,6 +88,12 @@ class PlayingCard extends Card {
     enhancment: Enhancment;
     seal: Seal;
     edition: Edition;
+}
+
+class Joker extends Card {
+}
+
+class Consumable extends Card {
 }
 
 class Hand {
