@@ -33,9 +33,9 @@ function matchFlush (hand: Hand) {
 function findStraights (hand: Hand) {
     const tolerance: number = shortcut_owned ? 2 : 1;
 
-    let straights: Set<Card>[] = [];
+    let straights: Set<PlayingCard>[] = [];
     let prev_num: number | null = null;
-    let current_cards: Set<Card> | null = null;
+    let current_cards: Set<PlayingCard> | null = null;
 
     // Make a sorted list of every number that appears.
     const numbers: number[] = Object.keys(hand.rank_sets).map(Number).sort((a, b) => a - b);
@@ -73,7 +73,7 @@ function matchStraight (hand: Hand) {
 }
 
 function matchTwoPair (hand: Hand) {
-    pair1: Set<Card> | null = null;
+    pair1: Set<PlayingCard> | null = null;
     for (const rank_sets of Object.values(hand.rank_sets)) {
         if (rank_sets.size >= 2) {
 	    if (!pair1) {
@@ -93,10 +93,10 @@ const match3OAK = matchNOAK(3);
 const matchPair = matchNOAK(2);
 
 function matchHighCard (hand: Hand) {
-    let best: Card | null = null;
+    let best: PlayingCard | null = null;
     for (const card of hand.cards_without_stone) {
 	if (!best || card.rank > best.rank) best = card;
     }
 
-    return best ? new Set<Card>([best]) : null;
+    return best ? new Set<PlayingCard>([best]) : null;
 }

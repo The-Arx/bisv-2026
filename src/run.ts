@@ -68,6 +68,12 @@ enum Rank {
 }
 
 class Card {
+    // Add stuff later.
+    // Taro, booster pack, vouchers, playing cards, jokers, etc.
+    // all inherit from this.
+}
+
+class PlayingCard extends Card {
     rank: Rank;
     suit: Suit;
     enhancment: Enhancment;
@@ -76,15 +82,15 @@ class Card {
 }
 
 class Hand {
-    cards_selected: Card[];
-    cards_without_stone: Card[];
+    cards_selected: PlayingCard[];
+    cards_without_stone: PlayingCard[];
     total_cards: number;
-    rank_sets: {[rank: Rank]: Set<Card>}
-    suit_sets: {[suit: Suit]: Set<Card>}
-    cards_scored: Card[];
+    rank_sets: {[rank: Rank]: Set<PlayingCard>}
+    suit_sets: {[suit: Suit]: Set<PlayingCard>}
+    cards_scored: PlayingCard[];
 
     // Does not initialized cards_scored
-    constructor (run, cards: Card[]) {
+    constructor (run, cards: PlayingCard[]) {
         this.cards_selected = cards;
 	this.cards_without_stone = cards.filter(card => card.enhancement !== Enhancement.STONE);
 
@@ -94,8 +100,8 @@ class Hand {
 	this.suit_sets = {};
 	
 	for (const card of cards_without_stone) {
-	    if (!this.rank_sets[card.rank]) this.rank_sets[card.rank] = new Set<Card>();
-	    if (!this.suit_sets[suit.rank]) this.suit_sets[card.suit] = new Set<Card>();
+	    if (!this.rank_sets[card.rank]) this.rank_sets[card.rank] = new Set<PlayingCard>();
+	    if (!this.suit_sets[suit.rank]) this.suit_sets[card.suit] = new Set<PlayingCard>();
 
 	    this.rank_sets[card.rank].add(card);
 	    this.suit_sets[card.suit].add(card);
@@ -103,7 +109,7 @@ class Hand {
     }
 }
 
-type MatchFunction = (hand: Hand) => Set<Card> | null;
+type MatchFunction = (hand: Hand) => Set<PlayingCard> | null;
 
 interface HandType {
     name: string;
