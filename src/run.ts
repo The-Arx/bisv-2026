@@ -1,11 +1,24 @@
 class Run {
     hand_size = 8;
-    hands = 4;
-    discards = 3;
+    hands = {
+	starting: 4,
+	remaining: 4,
+    };
+    discards = {
+	starting: 3,
+	remaining: 3,
+    };
     joker_slots = 5;
     consumable_slots = 2;
     ante = 1;
     round = 1;
+    money = 4;
+    
+    score = {
+	total: 0,
+	chips: 0,
+	mult: 0,
+    };
 
     four_fingers_owned = false;
     shortcut_owned = false;
@@ -17,6 +30,19 @@ class Run {
     constructor (deck: Deck) {
 	this.deck = deck;
 	deck.start_run(this);
+    }
+
+    function play_hand () {
+	// Do some hand playing stuff.
+	// TODO: Actually thinkg about this for more than 2 seconds.
+	deck.play_hand_hook(this);
+    }
+    
+    function end_round () {
+	deck.end_round_hook(this);
+	
+	hands.remaining = hands.starting;
+	discards.remaining = discards.starting;
     }
 }
 
@@ -74,7 +100,7 @@ enum Rank {
 
 class Card {
     // Add stuff later.
-    // Taro, planet, booster pack, vouchers, playing cards, jokers, etc.
+    // Tarot, planet, booster pack, vouchers, playing cards, jokers, etc.
     // all inherit from this.
 }
 
