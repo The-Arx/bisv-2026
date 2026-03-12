@@ -1,7 +1,3 @@
-class Deck {
-    start_run: (run: Run) => void;
-}
-
 class Run {
     hand_size = 8;
     hands = 4;
