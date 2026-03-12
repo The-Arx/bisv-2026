@@ -29,17 +29,17 @@ class Run {
 
     constructor (deck: Deck) {
 	this.deck = deck;
-	deck.start_run(this);
+	if (deck.start_run(this)) return;
     }
 
     function play_hand () {
 	// Do some hand playing stuff.
 	// TODO: Actually thinkg about this for more than 2 seconds.
-	deck.play_hand_hook(this);
+	if (deck.play_hand_hook(this)) return;
     }
     
     function end_round () {
-	deck.end_round_hook(this);
+	if (deck.end_round_hook(this)) return;
 	
 	hands.remaining = hands.starting;
 	discards.remaining = discards.starting;
